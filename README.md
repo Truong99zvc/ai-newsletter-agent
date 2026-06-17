@@ -98,7 +98,7 @@ The pipeline runs as a **5-step sequential process**:
 ## Project Structure
 
 ```
-AI-Agent/
+ai-newsletter-agent/
 ├── main.py                         # Entry point — runs the full pipeline
 ├── pyproject.toml                  # Project metadata and dependencies (uv)
 ├── docker/
@@ -345,7 +345,7 @@ To run automatically every day, add a cron job (Linux/macOS):
 
 ```bash
 # Run every day at 7:00 AM
-0 7 * * * cd /path/to/AI-Agent && uv run python main.py >> /var/log/ai-news.log 2>&1
+0 7 * * * cd /path/to/ai-newsletter-agent && uv run python main.py >> /var/log/ai-news.log 2>&1
 ```
 
 On Windows, use **Task Scheduler** to run `uv run python main.py` on a daily schedule.
