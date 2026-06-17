@@ -186,8 +186,8 @@ The `DigestAgent` (powered by **GPT-4o-mini**) processes every new article:
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/Truong99zvc/AI-Agent.git
-cd AI-Agent
+git clone https://github.com/Truong99zvc/ai-newsletter-agent.git
+cd ai-newsletter-agent
 ```
 
 ### 2. Install dependencies
