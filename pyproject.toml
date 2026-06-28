@@ -1,25 +1,52 @@
 [project]
-name = "ai-news-aggregator"
-version = "0.1.0"
-description = "Add your description here"
+name = "ai-newsletter-agent"
+version = "2.0.0"
+description = "AI-powered daily news digest agent that scrapes, summarizes, ranks, and delivers personalized newsletters"
 readme = "README.md"
 requires-python = ">=3.12"
+license = {text = "MIT"}
 dependencies = [
+    # Web Framework
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.34.0",
+
+    # AI / LLM
+    "openai>=2.7.2",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.7.0",
+
+    # Web Scraping & Content
     "beautifulsoup4>=4.14.2",
     "docling>=2.61.2",
     "feedparser>=6.0.12",
+    "aiohttp>=3.11.0",
+
+    # YouTube
+    "youtube-transcript-api>=1.2.3",
+
+    # Database
+    "psycopg2-binary>=2.9.11",
+    "sqlalchemy>=2.0.44",
+    "alembic>=1.15.0",
+
+    # Email & Markdown
     "markdown>=3.7.0",
     "markdownify>=0.11.6",
-    "openai>=2.7.2",
-    "psycopg2-binary>=2.9.11",
-    "pydantic>=2.0.0",
+
+    # Resilience & Async
+    "tenacity>=9.0.0",
+
+    # Config
     "python-dotenv>=1.2.1",
     "requests>=2.32.5",
-    "sqlalchemy>=2.0.44",
-    "youtube-transcript-api>=1.2.3",
 ]
 
 [dependency-groups]
 dev = [
     "ipykernel>=7.1.0",
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.24.0",
+    "pytest-cov>=6.0.0",
+    "httpx>=0.28.0",
+    "ruff>=0.8.0",
 ]
