@@ -15,14 +15,17 @@ from pydantic import BaseModel, Field
 # Common
 # ──────────────────────────────────────────────
 
+
 class PaginationParams(BaseModel):
     """Standard pagination parameters."""
+
     limit: int = Field(default=20, ge=1, le=100)
     offset: int = Field(default=0, ge=0)
 
 
 class PaginatedResponse(BaseModel):
     """Wrapper for paginated list responses."""
+
     items: List[Any]
     total: int
     limit: int
@@ -33,6 +36,7 @@ class PaginatedResponse(BaseModel):
 # ──────────────────────────────────────────────
 # Health
 # ──────────────────────────────────────────────
+
 
 class HealthResponse(BaseModel):
     status: str = "ok"
@@ -45,8 +49,10 @@ class HealthResponse(BaseModel):
 # Pipeline
 # ──────────────────────────────────────────────
 
+
 class PipelineRunRequest(BaseModel):
     """Request body for triggering a pipeline run."""
+
     hours: int = Field(default=24, ge=1, le=168, description="Lookback window in hours")
     top_n: int = Field(default=10, ge=1, le=50, description="Number of top articles")
     send_email: bool = Field(default=True, description="Whether to send email")
@@ -54,12 +60,14 @@ class PipelineRunRequest(BaseModel):
 
 class PipelineStepStatus(BaseModel):
     """Status of a single pipeline step."""
+
     status: str
     detail: Optional[Dict[str, Any]] = None
 
 
 class PipelineRunResponse(BaseModel):
     """Response for a pipeline run."""
+
     run_id: str
     status: str
     started_at: Optional[datetime] = None
@@ -80,6 +88,7 @@ class PipelineRunResponse(BaseModel):
 
 class PipelineRunListResponse(BaseModel):
     """Response for listing pipeline runs."""
+
     runs: List[PipelineRunResponse]
     total: int
 
@@ -88,8 +97,10 @@ class PipelineRunListResponse(BaseModel):
 # Digests
 # ──────────────────────────────────────────────
 
+
 class DigestResponse(BaseModel):
     """Response for a single digest."""
+
     id: str
     article_type: str
     article_id: str
@@ -105,6 +116,7 @@ class DigestResponse(BaseModel):
 
 class DigestListResponse(BaseModel):
     """Paginated list of digests."""
+
     items: List[DigestResponse]
     total: int
     limit: int
@@ -113,6 +125,7 @@ class DigestListResponse(BaseModel):
 
 class DigestSearchRequest(BaseModel):
     """Search parameters for digests."""
+
     query: str = Field(min_length=1, max_length=200)
     source_type: Optional[str] = None
     limit: int = Field(default=20, ge=1, le=100)
@@ -123,8 +136,10 @@ class DigestSearchRequest(BaseModel):
 # Sources
 # ──────────────────────────────────────────────
 
+
 class SourceInfo(BaseModel):
     """Information about a registered scraper source."""
+
     name: str
     display_name: str
     type: str
@@ -133,6 +148,7 @@ class SourceInfo(BaseModel):
 
 class SourceListResponse(BaseModel):
     """List of all registered sources."""
+
     sources: List[SourceInfo]
     total: int
 
@@ -141,8 +157,10 @@ class SourceListResponse(BaseModel):
 # Analytics
 # ──────────────────────────────────────────────
 
+
 class AnalyticsSummary(BaseModel):
     """Dashboard analytics summary."""
+
     total_articles: int
     total_digests: int
     articles_today: int
@@ -153,6 +171,7 @@ class AnalyticsSummary(BaseModel):
 
 class TrendDataPoint(BaseModel):
     """Single data point in a trend chart."""
+
     date: str
     count: int
     source: Optional[str] = None
@@ -160,5 +179,6 @@ class TrendDataPoint(BaseModel):
 
 class TrendsResponse(BaseModel):
     """Trend data for analytics charts."""
+
     data: List[TrendDataPoint]
     period_days: int

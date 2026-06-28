@@ -99,8 +99,11 @@ class TestBaseScraper:
 
         scraper = TestScraper()
         item = ScrapedItem(
-            source_id="x", source_type="test", title="T",
-            url="http://x.com", published_at=datetime.now(timezone.utc),
+            source_id="x",
+            source_type="test",
+            title="T",
+            url="http://x.com",
+            published_at=datetime.now(timezone.utc),
         )
         result = scraper.enrich(item)
         assert result == item

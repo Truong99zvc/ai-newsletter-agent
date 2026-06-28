@@ -50,7 +50,9 @@ def setup_logging(level: str = "INFO", module_levels: Optional[dict] = None) -> 
     # Apply per-module overrides
     if module_levels:
         for module, mod_level in module_levels.items():
-            logging.getLogger(module).setLevel(getattr(logging, mod_level.upper(), logging.INFO))
+            logging.getLogger(module).setLevel(
+                getattr(logging, mod_level.upper(), logging.INFO)
+            )
 
 
 def get_logger(name: str) -> logging.Logger:

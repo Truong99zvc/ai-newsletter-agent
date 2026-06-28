@@ -46,6 +46,7 @@ class YouTubeChannelScraper(BaseScraper):
             self.channel_ids = channel_ids
         else:
             from app.config import YOUTUBE_CHANNELS
+
             self.channel_ids = YOUTUBE_CHANNELS
 
     def get_source_name(self) -> str:
@@ -88,19 +89,23 @@ class YouTubeChannelScraper(BaseScraper):
                     )
                     if published_time >= cutoff_time:
                         video_id = self._extract_video_id(entry.link)
-                        items.append(ScrapedItem(
-                            source_id=video_id,
-                            source_type=self.get_source_name(),
-                            title=entry.title,
-                            url=entry.link,
-                            description=entry.get("summary", ""),
-                            published_at=published_time,
-                            metadata={"channel_id": channel_id},
-                        ))
+                        items.append(
+                            ScrapedItem(
+                                source_id=video_id,
+                                source_type=self.get_source_name(),
+                                title=entry.title,
+                                url=entry.link,
+                                description=entry.get("summary", ""),
+                                published_at=published_time,
+                                metadata={"channel_id": channel_id},
+                            )
+                        )
             except Exception as e:
                 logger.error(f"Error scraping channel {channel_id}: {e}")
 
-        logger.info(f"Scraped {len(items)} videos from {len(self.channel_ids)} channels")
+        logger.info(
+            f"Scraped {len(items)} videos from {len(self.channel_ids)} channels"
+        )
         return items
 
     def enrich(self, item: ScrapedItem) -> ScrapedItem:

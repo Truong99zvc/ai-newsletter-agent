@@ -57,15 +57,19 @@ class DeepMindScraper(BaseScraper):
                     if entry.get("tags"):
                         category = entry["tags"][0].get("term")
 
-                    items.append(ScrapedItem(
-                        source_id=entry.get("id", entry.get("link", "")),
-                        source_type=self.get_source_name(),
-                        title=entry.get("title", ""),
-                        url=entry.get("link", ""),
-                        description=entry.get("description", entry.get("summary", "")),
-                        published_at=published_time,
-                        category=category,
-                    ))
+                    items.append(
+                        ScrapedItem(
+                            source_id=entry.get("id", entry.get("link", "")),
+                            source_type=self.get_source_name(),
+                            title=entry.get("title", ""),
+                            url=entry.get("link", ""),
+                            description=entry.get(
+                                "description", entry.get("summary", "")
+                            ),
+                            published_at=published_time,
+                            category=category,
+                        )
+                    )
         except Exception as e:
             logger.error(f"Error scraping DeepMind RSS: {e}")
 

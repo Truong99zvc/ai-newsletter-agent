@@ -71,12 +71,16 @@ class ScrapedContent(Base):
     __tablename__ = "scraped_content"
 
     id = Column(String, primary_key=True, comment="Format: {source_type}:{source_id}")
-    source_type = Column(String, nullable=False, index=True, comment="Source plugin name")
+    source_type = Column(
+        String, nullable=False, index=True, comment="Source plugin name"
+    )
     source_id = Column(String, nullable=False, comment="Source-specific unique ID")
     title = Column(String, nullable=False)
     url = Column(String, nullable=False)
     description = Column(Text, default="")
-    content = Column(Text, nullable=True, comment="Full content (transcript, markdown, etc.)")
+    content = Column(
+        Text, nullable=True, comment="Full content (transcript, markdown, etc.)"
+    )
     published_at = Column(DateTime, nullable=False, index=True)
     category = Column(String, nullable=True)
     metadata_json = Column(JSON, default=dict, comment="Source-specific metadata")
@@ -94,7 +98,9 @@ class Digest(Base):
     url = Column(String, nullable=False)
     title = Column(String, nullable=False)
     summary = Column(Text, nullable=False)
-    relevance_score = Column(Float, nullable=True, comment="Curator-assigned relevance score")
+    relevance_score = Column(
+        Float, nullable=True, comment="Curator-assigned relevance score"
+    )
     rank = Column(Integer, nullable=True, comment="Curator-assigned rank position")
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
@@ -111,10 +117,14 @@ class PipelineRun(Base):
 
     id = Column(String, primary_key=True, comment="UUID for this run")
     status = Column(
-        String, nullable=False, default="pending",
-        comment="pending | running | success | failed"
+        String,
+        nullable=False,
+        default="pending",
+        comment="pending | running | success | failed",
     )
-    started_at = Column(DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
+    started_at = Column(
+        DateTime, nullable=False, default=lambda: datetime.now(timezone.utc)
+    )
     completed_at = Column(DateTime, nullable=True)
     duration_seconds = Column(Float, nullable=True)
 
@@ -124,13 +134,17 @@ class PipelineRun(Base):
 
     # Step-by-step tracking
     steps_completed = Column(JSON, default=dict, comment="Status of each pipeline step")
-    current_step = Column(String, nullable=True, comment="Currently executing step name")
+    current_step = Column(
+        String, nullable=True, comment="Currently executing step name"
+    )
 
     # Results
     articles_scraped = Column(Integer, default=0)
     articles_enriched = Column(Integer, default=0)
     digests_created = Column(Integer, default=0)
-    email_sent = Column(String, nullable=True, default="false", comment="true | false | skipped")
+    email_sent = Column(
+        String, nullable=True, default="false", comment="true | false | skipped"
+    )
 
     # Error tracking
     error_message = Column(Text, nullable=True)

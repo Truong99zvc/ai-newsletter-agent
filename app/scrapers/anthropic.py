@@ -28,31 +28,35 @@ class AnthropicScraper:
         cutoff_time = now - timedelta(hours=hours)
         articles = []
         seen_guids = set()
-        
+
         for rss_url in self.rss_urls:
             feed = feedparser.parse(rss_url)
             if not feed.entries:
                 continue
-            
+
             for entry in feed.entries:
                 published_parsed = getattr(entry, "published_parsed", None)
                 if not published_parsed:
                     continue
-                
+
                 published_time = datetime(*published_parsed[:6], tzinfo=timezone.utc)
                 if published_time >= cutoff_time:
                     guid = entry.get("id", entry.get("link", ""))
                     if guid not in seen_guids:
                         seen_guids.add(guid)
-                        articles.append(AnthropicArticle(
-                            title=entry.get("title", ""),
-                            description=entry.get("description", ""),
-                            url=entry.get("link", ""),
-                            guid=guid,
-                            published_at=published_time,
-                            category=entry.get("tags", [{}])[0].get("term") if entry.get("tags") else None
-                        ))
-        
+                        articles.append(
+                            AnthropicArticle(
+                                title=entry.get("title", ""),
+                                description=entry.get("description", ""),
+                                url=entry.get("link", ""),
+                                guid=guid,
+                                published_at=published_time,
+                                category=entry.get("tags", [{}])[0].get("term")
+                                if entry.get("tags")
+                                else None,
+                            )
+                        )
+
         return articles
 
     def url_to_markdown(self, url: str) -> Optional[str]:
@@ -61,6 +65,7 @@ class AnthropicScraper:
             return result.document.export_to_markdown()
         except Exception:
             return None
+
 
 if __name__ == "__main__":
     scraper = AnthropicScraper()

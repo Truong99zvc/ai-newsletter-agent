@@ -25,12 +25,18 @@ class ScrapedItem(BaseModel):
     different sources (YouTube, blogs, papers) into a single format.
     """
 
-    source_id: str = Field(description="Unique identifier from the source (video_id, guid, etc.)")
-    source_type: str = Field(description="Source type identifier (e.g., 'youtube', 'openai', 'arxiv')")
+    source_id: str = Field(
+        description="Unique identifier from the source (video_id, guid, etc.)"
+    )
+    source_type: str = Field(
+        description="Source type identifier (e.g., 'youtube', 'openai', 'arxiv')"
+    )
     title: str = Field(description="Content title")
     url: str = Field(description="Link to the original content")
     description: str = Field(default="", description="Short description or excerpt")
-    content: Optional[str] = Field(default=None, description="Full content text (transcript, markdown, etc.)")
+    content: Optional[str] = Field(
+        default=None, description="Full content text (transcript, markdown, etc.)"
+    )
     published_at: datetime = Field(description="Publication timestamp")
     category: Optional[str] = Field(default=None, description="Content category or tag")
     metadata: dict = Field(default_factory=dict, description="Source-specific metadata")

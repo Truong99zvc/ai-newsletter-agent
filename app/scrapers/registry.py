@@ -116,7 +116,9 @@ class ScraperRegistry:
             except Exception as e:
                 logger.warning(f"Failed to register {scraper.__class__.__name__}: {e}")
 
-        logger.info(f"Auto-discovery complete: {len(self._scrapers)} scrapers registered")
+        logger.info(
+            f"Auto-discovery complete: {len(self._scrapers)} scrapers registered"
+        )
 
     def __len__(self) -> int:
         return len(self._scrapers)

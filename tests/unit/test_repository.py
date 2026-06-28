@@ -18,7 +18,9 @@ class TestYouTubeVideoRepository:
         assert video.video_id == sample_youtube_video["video_id"]
         assert video.title == sample_youtube_video["title"]
 
-    def test_create_duplicate_youtube_video_returns_none(self, repository, sample_youtube_video):
+    def test_create_duplicate_youtube_video_returns_none(
+        self, repository, sample_youtube_video
+    ):
         """Should return None when inserting a duplicate video."""
         repository.create_youtube_video(**sample_youtube_video)
         duplicate = repository.create_youtube_video(**sample_youtube_video)
@@ -46,13 +48,19 @@ class TestYouTubeVideoRepository:
     def test_get_videos_without_transcript(self, repository):
         """Should return only videos with no transcript."""
         repository.create_youtube_video(
-            video_id="vid_1", title="Has transcript", url="http://yt.com/1",
-            channel_id="UC1", published_at=datetime.now(timezone.utc),
+            video_id="vid_1",
+            title="Has transcript",
+            url="http://yt.com/1",
+            channel_id="UC1",
+            published_at=datetime.now(timezone.utc),
             transcript="Some transcript text",
         )
         repository.create_youtube_video(
-            video_id="vid_2", title="No transcript", url="http://yt.com/2",
-            channel_id="UC1", published_at=datetime.now(timezone.utc),
+            video_id="vid_2",
+            title="No transcript",
+            url="http://yt.com/2",
+            channel_id="UC1",
+            published_at=datetime.now(timezone.utc),
         )
         videos = repository.get_youtube_videos_without_transcript()
         assert len(videos) == 1
@@ -139,17 +147,25 @@ class TestScrapedContentRepository:
 
     def test_get_without_enrichment(self, repository):
         """Should return items where content is None."""
-        repository.upsert_scraped_content({
-            "source_id": "enriched", "source_type": "test",
-            "title": "Enriched", "url": "http://test.com/1",
-            "content": "Has content",
-            "published_at": datetime.now(timezone.utc),
-        })
-        repository.upsert_scraped_content({
-            "source_id": "not_enriched", "source_type": "test",
-            "title": "Not enriched", "url": "http://test.com/2",
-            "published_at": datetime.now(timezone.utc),
-        })
+        repository.upsert_scraped_content(
+            {
+                "source_id": "enriched",
+                "source_type": "test",
+                "title": "Enriched",
+                "url": "http://test.com/1",
+                "content": "Has content",
+                "published_at": datetime.now(timezone.utc),
+            }
+        )
+        repository.upsert_scraped_content(
+            {
+                "source_id": "not_enriched",
+                "source_type": "test",
+                "title": "Not enriched",
+                "url": "http://test.com/2",
+                "published_at": datetime.now(timezone.utc),
+            }
+        )
         items = repository.get_scraped_content_without_enrichment()
         assert len(items) == 1
         assert items[0].source_id == "not_enriched"
@@ -161,8 +177,10 @@ class TestDigestRepository:
     def test_create_digest(self, repository):
         """Should create a new digest."""
         digest = repository.create_digest(
-            article_type="openai", article_id="test-001",
-            url="http://test.com", title="Test Digest",
+            article_type="openai",
+            article_id="test-001",
+            url="http://test.com",
+            title="Test Digest",
             summary="This is a test summary.",
         )
         assert digest is not None
@@ -171,13 +189,17 @@ class TestDigestRepository:
     def test_duplicate_digest_returns_none(self, repository):
         """Should prevent duplicate digests."""
         repository.create_digest(
-            article_type="openai", article_id="test-001",
-            url="http://test.com", title="Test",
+            article_type="openai",
+            article_id="test-001",
+            url="http://test.com",
+            title="Test",
             summary="Summary",
         )
         duplicate = repository.create_digest(
-            article_type="openai", article_id="test-001",
-            url="http://test.com", title="Test",
+            article_type="openai",
+            article_id="test-001",
+            url="http://test.com",
+            title="Test",
             summary="Summary",
         )
         assert duplicate is None
@@ -186,8 +208,10 @@ class TestDigestRepository:
         """Should return digests from the specified time window."""
         # Create a recent digest
         repository.create_digest(
-            article_type="openai", article_id="recent",
-            url="http://test.com/recent", title="Recent",
+            article_type="openai",
+            article_id="recent",
+            url="http://test.com/recent",
+            title="Recent",
             summary="Recent article",
         )
         digests = repository.get_recent_digests(hours=24)
@@ -198,8 +222,10 @@ class TestDigestRepository:
         """Should support pagination."""
         for i in range(5):
             repository.create_digest(
-                article_type="openai", article_id=f"page-{i}",
-                url=f"http://test.com/{i}", title=f"Digest {i}",
+                article_type="openai",
+                article_id=f"page-{i}",
+                url=f"http://test.com/{i}",
+                title=f"Digest {i}",
                 summary=f"Summary {i}",
             )
         page1 = repository.get_digests_paginated(limit=2, offset=0)
@@ -210,13 +236,17 @@ class TestDigestRepository:
     def test_search_digests(self, repository):
         """Should search in title and summary."""
         repository.create_digest(
-            article_type="openai", article_id="s-1",
-            url="http://test.com/1", title="GPT-5 Released",
+            article_type="openai",
+            article_id="s-1",
+            url="http://test.com/1",
+            title="GPT-5 Released",
             summary="OpenAI announces GPT-5 with improved reasoning.",
         )
         repository.create_digest(
-            article_type="anthropic", article_id="s-2",
-            url="http://test.com/2", title="Claude 4 Safety Report",
+            article_type="anthropic",
+            article_id="s-2",
+            url="http://test.com/2",
+            title="Claude 4 Safety Report",
             summary="Anthropic publishes new safety benchmarks.",
         )
         results = repository.get_digests_paginated(search_query="GPT-5")
@@ -226,8 +256,10 @@ class TestDigestRepository:
     def test_update_ranking(self, repository):
         """Should update relevance_score and rank."""
         repository.create_digest(
-            article_type="openai", article_id="rank-test",
-            url="http://test.com", title="Rank Test",
+            article_type="openai",
+            article_id="rank-test",
+            url="http://test.com",
+            title="Rank Test",
             summary="Summary",
         )
         result = repository.update_digest_ranking("openai:rank-test", score=8.5, rank=1)

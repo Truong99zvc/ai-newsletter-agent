@@ -47,6 +47,7 @@ def test_db():
 def repository(test_db):
     """Create a Repository instance backed by the test database."""
     from app.database.repository import Repository
+
     return Repository(session=test_db)
 
 
@@ -118,5 +119,8 @@ def sample_scraped_item():
         "content": "We revisit the original transformer architecture and propose improvements...",
         "published_at": datetime(2026, 6, 28, 8, 0, 0, tzinfo=timezone.utc),
         "category": "cs.LG",
-        "metadata": {"authors": ["John Doe", "Jane Smith"], "pdf_url": "https://arxiv.org/pdf/2026.12345"},
+        "metadata": {
+            "authors": ["John Doe", "Jane Smith"],
+            "pdf_url": "https://arxiv.org/pdf/2026.12345",
+        },
     }

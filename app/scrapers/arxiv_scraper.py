@@ -18,11 +18,11 @@ logger = get_logger(__name__)
 
 # arXiv categories relevant to AI/ML
 ARXIV_CATEGORIES = [
-    "cs.AI",   # Artificial Intelligence
-    "cs.LG",   # Machine Learning
-    "cs.CL",   # Computation and Language (NLP)
-    "cs.CV",   # Computer Vision
-    "stat.ML", # Machine Learning (Statistics)
+    "cs.AI",  # Artificial Intelligence
+    "cs.LG",  # Machine Learning
+    "cs.CL",  # Computation and Language (NLP)
+    "cs.CV",  # Computer Vision
+    "stat.ML",  # Machine Learning (Statistics)
 ]
 
 ARXIV_API_URL = "http://export.arxiv.org/api/query"
@@ -91,13 +91,23 @@ class ArxivScraper(BaseScraper):
                 # Extract paper ID from the URL
                 paper_id_elem = entry.find("atom:id", ns)
                 paper_id = paper_id_elem.text if paper_id_elem is not None else ""
-                paper_id_short = paper_id.split("/abs/")[-1] if "/abs/" in paper_id else paper_id
+                paper_id_short = (
+                    paper_id.split("/abs/")[-1] if "/abs/" in paper_id else paper_id
+                )
 
                 title_elem = entry.find("atom:title", ns)
-                title = title_elem.text.strip().replace("\n", " ") if title_elem is not None else ""
+                title = (
+                    title_elem.text.strip().replace("\n", " ")
+                    if title_elem is not None
+                    else ""
+                )
 
                 summary_elem = entry.find("atom:summary", ns)
-                summary = summary_elem.text.strip().replace("\n", " ") if summary_elem is not None else ""
+                summary = (
+                    summary_elem.text.strip().replace("\n", " ")
+                    if summary_elem is not None
+                    else ""
+                )
 
                 # Get PDF link
                 pdf_url = paper_id.replace("/abs/", "/pdf/") if paper_id else ""
@@ -118,21 +128,23 @@ class ArxivScraper(BaseScraper):
 
                 primary_category = categories[0] if categories else None
 
-                items.append(ScrapedItem(
-                    source_id=paper_id_short,
-                    source_type=self.get_source_name(),
-                    title=title,
-                    url=paper_id,
-                    description=summary,
-                    content=summary,  # Abstract as initial content
-                    published_at=published_time,
-                    category=primary_category,
-                    metadata={
-                        "authors": authors,
-                        "categories": categories,
-                        "pdf_url": pdf_url,
-                    },
-                ))
+                items.append(
+                    ScrapedItem(
+                        source_id=paper_id_short,
+                        source_type=self.get_source_name(),
+                        title=title,
+                        url=paper_id,
+                        description=summary,
+                        content=summary,  # Abstract as initial content
+                        published_at=published_time,
+                        category=primary_category,
+                        metadata={
+                            "authors": authors,
+                            "categories": categories,
+                            "pdf_url": pdf_url,
+                        },
+                    )
+                )
 
         except Exception as e:
             logger.error(f"Error scraping arXiv: {e}")

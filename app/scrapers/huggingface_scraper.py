@@ -60,15 +60,19 @@ class HuggingFaceScraper(BaseScraper):
 
                     guid = entry.get("id", entry.get("link", ""))
 
-                    items.append(ScrapedItem(
-                        source_id=guid,
-                        source_type=self.get_source_name(),
-                        title=entry.get("title", ""),
-                        url=entry.get("link", ""),
-                        description=entry.get("description", entry.get("summary", "")),
-                        published_at=published_time,
-                        category=category,
-                    ))
+                    items.append(
+                        ScrapedItem(
+                            source_id=guid,
+                            source_type=self.get_source_name(),
+                            title=entry.get("title", ""),
+                            url=entry.get("link", ""),
+                            description=entry.get(
+                                "description", entry.get("summary", "")
+                            ),
+                            published_at=published_time,
+                            category=category,
+                        )
+                    )
         except Exception as e:
             logger.error(f"Error scraping HuggingFace RSS: {e}")
 

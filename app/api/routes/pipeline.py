@@ -56,7 +56,9 @@ def trigger_pipeline(
         send_email=request.send_email,
     )
 
-    logger.info(f"Pipeline run {run.id} triggered (hours={request.hours}, top_n={request.top_n})")
+    logger.info(
+        f"Pipeline run {run.id} triggered (hours={request.hours}, top_n={request.top_n})"
+    )
 
     return PipelineRunResponse(
         run_id=run.id,

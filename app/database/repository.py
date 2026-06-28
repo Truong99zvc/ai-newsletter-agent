@@ -43,15 +43,26 @@ class Repository:
     # ──────────────────────────────────────────────
 
     def create_youtube_video(
-        self, video_id: str, title: str, url: str, channel_id: str,
-        published_at: datetime, description: str = "", transcript: Optional[str] = None,
+        self,
+        video_id: str,
+        title: str,
+        url: str,
+        channel_id: str,
+        published_at: datetime,
+        description: str = "",
+        transcript: Optional[str] = None,
     ) -> Optional[YouTubeVideo]:
         existing = self.session.query(YouTubeVideo).filter_by(video_id=video_id).first()
         if existing:
             return None
         video = YouTubeVideo(
-            video_id=video_id, title=title, url=url, channel_id=channel_id,
-            published_at=published_at, description=description, transcript=transcript,
+            video_id=video_id,
+            title=title,
+            url=url,
+            channel_id=channel_id,
+            published_at=published_at,
+            description=description,
+            transcript=transcript,
         )
         self.session.add(video)
         self.session.commit()
@@ -60,20 +71,34 @@ class Repository:
     def bulk_create_youtube_videos(self, videos: List[dict]) -> int:
         new_videos = []
         for v in videos:
-            existing = self.session.query(YouTubeVideo).filter_by(video_id=v["video_id"]).first()
+            existing = (
+                self.session.query(YouTubeVideo)
+                .filter_by(video_id=v["video_id"])
+                .first()
+            )
             if not existing:
-                new_videos.append(YouTubeVideo(
-                    video_id=v["video_id"], title=v["title"], url=v["url"],
-                    channel_id=v.get("channel_id", ""), published_at=v["published_at"],
-                    description=v.get("description", ""), transcript=v.get("transcript"),
-                ))
+                new_videos.append(
+                    YouTubeVideo(
+                        video_id=v["video_id"],
+                        title=v["title"],
+                        url=v["url"],
+                        channel_id=v.get("channel_id", ""),
+                        published_at=v["published_at"],
+                        description=v.get("description", ""),
+                        transcript=v.get("transcript"),
+                    )
+                )
         if new_videos:
             self.session.add_all(new_videos)
             self.session.commit()
         return len(new_videos)
 
-    def get_youtube_videos_without_transcript(self, limit: Optional[int] = None) -> List[YouTubeVideo]:
-        query = self.session.query(YouTubeVideo).filter(YouTubeVideo.transcript.is_(None))
+    def get_youtube_videos_without_transcript(
+        self, limit: Optional[int] = None
+    ) -> List[YouTubeVideo]:
+        query = self.session.query(YouTubeVideo).filter(
+            YouTubeVideo.transcript.is_(None)
+        )
         if limit:
             query = query.limit(limit)
         return query.all()
@@ -91,15 +116,24 @@ class Repository:
     # ──────────────────────────────────────────────
 
     def create_openai_article(
-        self, guid: str, title: str, url: str, published_at: datetime,
-        description: str = "", category: Optional[str] = None,
+        self,
+        guid: str,
+        title: str,
+        url: str,
+        published_at: datetime,
+        description: str = "",
+        category: Optional[str] = None,
     ) -> Optional[OpenAIArticle]:
         existing = self.session.query(OpenAIArticle).filter_by(guid=guid).first()
         if existing:
             return None
         article = OpenAIArticle(
-            guid=guid, title=title, url=url, published_at=published_at,
-            description=description, category=category,
+            guid=guid,
+            title=title,
+            url=url,
+            published_at=published_at,
+            description=description,
+            category=category,
         )
         self.session.add(article)
         self.session.commit()
@@ -108,13 +142,20 @@ class Repository:
     def bulk_create_openai_articles(self, articles: List[dict]) -> int:
         new_articles = []
         for a in articles:
-            existing = self.session.query(OpenAIArticle).filter_by(guid=a["guid"]).first()
+            existing = (
+                self.session.query(OpenAIArticle).filter_by(guid=a["guid"]).first()
+            )
             if not existing:
-                new_articles.append(OpenAIArticle(
-                    guid=a["guid"], title=a["title"], url=a["url"],
-                    published_at=a["published_at"], description=a.get("description", ""),
-                    category=a.get("category"),
-                ))
+                new_articles.append(
+                    OpenAIArticle(
+                        guid=a["guid"],
+                        title=a["title"],
+                        url=a["url"],
+                        published_at=a["published_at"],
+                        description=a.get("description", ""),
+                        category=a.get("category"),
+                    )
+                )
         if new_articles:
             self.session.add_all(new_articles)
             self.session.commit()
@@ -125,15 +166,24 @@ class Repository:
     # ──────────────────────────────────────────────
 
     def create_anthropic_article(
-        self, guid: str, title: str, url: str, published_at: datetime,
-        description: str = "", category: Optional[str] = None,
+        self,
+        guid: str,
+        title: str,
+        url: str,
+        published_at: datetime,
+        description: str = "",
+        category: Optional[str] = None,
     ) -> Optional[AnthropicArticle]:
         existing = self.session.query(AnthropicArticle).filter_by(guid=guid).first()
         if existing:
             return None
         article = AnthropicArticle(
-            guid=guid, title=title, url=url, published_at=published_at,
-            description=description, category=category,
+            guid=guid,
+            title=title,
+            url=url,
+            published_at=published_at,
+            description=description,
+            category=category,
         )
         self.session.add(article)
         self.session.commit()
@@ -142,20 +192,31 @@ class Repository:
     def bulk_create_anthropic_articles(self, articles: List[dict]) -> int:
         new_articles = []
         for a in articles:
-            existing = self.session.query(AnthropicArticle).filter_by(guid=a["guid"]).first()
+            existing = (
+                self.session.query(AnthropicArticle).filter_by(guid=a["guid"]).first()
+            )
             if not existing:
-                new_articles.append(AnthropicArticle(
-                    guid=a["guid"], title=a["title"], url=a["url"],
-                    published_at=a["published_at"], description=a.get("description", ""),
-                    category=a.get("category"),
-                ))
+                new_articles.append(
+                    AnthropicArticle(
+                        guid=a["guid"],
+                        title=a["title"],
+                        url=a["url"],
+                        published_at=a["published_at"],
+                        description=a.get("description", ""),
+                        category=a.get("category"),
+                    )
+                )
         if new_articles:
             self.session.add_all(new_articles)
             self.session.commit()
         return len(new_articles)
 
-    def get_anthropic_articles_without_markdown(self, limit: Optional[int] = None) -> List[AnthropicArticle]:
-        query = self.session.query(AnthropicArticle).filter(AnthropicArticle.markdown.is_(None))
+    def get_anthropic_articles_without_markdown(
+        self, limit: Optional[int] = None
+    ) -> List[AnthropicArticle]:
+        query = self.session.query(AnthropicArticle).filter(
+            AnthropicArticle.markdown.is_(None)
+        )
         if limit:
             query = query.limit(limit)
         return query.all()
@@ -213,10 +274,14 @@ class Repository:
         return new_count
 
     def get_scraped_content_without_enrichment(
-        self, source_type: Optional[str] = None, limit: Optional[int] = None,
+        self,
+        source_type: Optional[str] = None,
+        limit: Optional[int] = None,
     ) -> List[ScrapedContent]:
         """Get scraped content items that haven't been enriched yet."""
-        query = self.session.query(ScrapedContent).filter(ScrapedContent.content.is_(None))
+        query = self.session.query(ScrapedContent).filter(
+            ScrapedContent.content.is_(None)
+        )
         if source_type:
             query = query.filter(ScrapedContent.source_type == source_type)
         if limit:
@@ -233,17 +298,29 @@ class Repository:
         return False
 
     def get_recent_scraped_content(
-        self, hours: int = 24, source_type: Optional[str] = None,
-        limit: int = 100, offset: int = 0,
+        self,
+        hours: int = 24,
+        source_type: Optional[str] = None,
+        limit: int = 100,
+        offset: int = 0,
     ) -> List[ScrapedContent]:
         """Get recently scraped content with optional filtering."""
         cutoff = datetime.now(timezone.utc) - timedelta(hours=hours)
-        query = self.session.query(ScrapedContent).filter(ScrapedContent.published_at >= cutoff)
+        query = self.session.query(ScrapedContent).filter(
+            ScrapedContent.published_at >= cutoff
+        )
         if source_type:
             query = query.filter(ScrapedContent.source_type == source_type)
-        return query.order_by(ScrapedContent.published_at.desc()).offset(offset).limit(limit).all()
+        return (
+            query.order_by(ScrapedContent.published_at.desc())
+            .offset(offset)
+            .limit(limit)
+            .all()
+        )
 
-    def count_scraped_content(self, hours: Optional[int] = None, source_type: Optional[str] = None) -> int:
+    def count_scraped_content(
+        self, hours: Optional[int] = None, source_type: Optional[str] = None
+    ) -> int:
         """Count scraped content items with optional filters."""
         query = self.session.query(ScrapedContent)
         if hours:
@@ -256,9 +333,11 @@ class Repository:
     def get_source_counts(self, hours: int = 24) -> Dict[str, int]:
         """Get article count breakdown by source for the given period."""
         cutoff = datetime.now(timezone.utc) - timedelta(hours=hours)
-        items = self.session.query(ScrapedContent).filter(
-            ScrapedContent.published_at >= cutoff
-        ).all()
+        items = (
+            self.session.query(ScrapedContent)
+            .filter(ScrapedContent.published_at >= cutoff)
+            .all()
+        )
         counts: Dict[str, int] = {}
         for item in items:
             counts[item.source_type] = counts.get(item.source_type, 0) + 1
@@ -268,7 +347,9 @@ class Repository:
     # Digests
     # ──────────────────────────────────────────────
 
-    def get_articles_without_digest(self, limit: Optional[int] = None) -> List[Dict[str, Any]]:
+    def get_articles_without_digest(
+        self, limit: Optional[int] = None
+    ) -> List[Dict[str, Any]]:
         """Get all articles (from all sources) that don't have a digest yet."""
         articles = []
         seen_ids = set()
@@ -278,59 +359,87 @@ class Repository:
             seen_ids.add(f"{d.article_type}:{d.article_id}")
 
         # Legacy YouTube videos
-        youtube_videos = self.session.query(YouTubeVideo).filter(
-            YouTubeVideo.transcript.isnot(None),
-            YouTubeVideo.transcript != "__UNAVAILABLE__",
-        ).all()
+        youtube_videos = (
+            self.session.query(YouTubeVideo)
+            .filter(
+                YouTubeVideo.transcript.isnot(None),
+                YouTubeVideo.transcript != "__UNAVAILABLE__",
+            )
+            .all()
+        )
         for video in youtube_videos:
             key = f"youtube:{video.video_id}"
             if key not in seen_ids:
-                articles.append({
-                    "type": "youtube", "id": video.video_id,
-                    "title": video.title, "url": video.url,
-                    "content": video.transcript or video.description or "",
-                    "published_at": video.published_at,
-                })
+                articles.append(
+                    {
+                        "type": "youtube",
+                        "id": video.video_id,
+                        "title": video.title,
+                        "url": video.url,
+                        "content": video.transcript or video.description or "",
+                        "published_at": video.published_at,
+                    }
+                )
 
         # Legacy OpenAI articles
         openai_articles = self.session.query(OpenAIArticle).all()
         for article in openai_articles:
             key = f"openai:{article.guid}"
             if key not in seen_ids:
-                articles.append({
-                    "type": "openai", "id": article.guid,
-                    "title": article.title, "url": article.url,
-                    "content": article.description or "",
-                    "published_at": article.published_at,
-                })
+                articles.append(
+                    {
+                        "type": "openai",
+                        "id": article.guid,
+                        "title": article.title,
+                        "url": article.url,
+                        "content": article.description or "",
+                        "published_at": article.published_at,
+                    }
+                )
 
         # Legacy Anthropic articles
-        anthropic_articles = self.session.query(AnthropicArticle).filter(
-            AnthropicArticle.markdown.isnot(None),
-        ).all()
+        anthropic_articles = (
+            self.session.query(AnthropicArticle)
+            .filter(
+                AnthropicArticle.markdown.isnot(None),
+            )
+            .all()
+        )
         for article in anthropic_articles:
             key = f"anthropic:{article.guid}"
             if key not in seen_ids:
-                articles.append({
-                    "type": "anthropic", "id": article.guid,
-                    "title": article.title, "url": article.url,
-                    "content": article.markdown or article.description or "",
-                    "published_at": article.published_at,
-                })
+                articles.append(
+                    {
+                        "type": "anthropic",
+                        "id": article.guid,
+                        "title": article.title,
+                        "url": article.url,
+                        "content": article.markdown or article.description or "",
+                        "published_at": article.published_at,
+                    }
+                )
 
         # New universal scraped_content table
-        scraped_items = self.session.query(ScrapedContent).filter(
-            ScrapedContent.content.isnot(None),
-        ).all()
+        scraped_items = (
+            self.session.query(ScrapedContent)
+            .filter(
+                ScrapedContent.content.isnot(None),
+            )
+            .all()
+        )
         for item in scraped_items:
             key = f"{item.source_type}:{item.source_id}"
             if key not in seen_ids:
-                articles.append({
-                    "type": item.source_type, "id": item.source_id,
-                    "title": item.title, "url": item.url,
-                    "content": item.content or item.description or "",
-                    "published_at": item.published_at,
-                })
+                articles.append(
+                    {
+                        "type": item.source_type,
+                        "id": item.source_id,
+                        "title": item.title,
+                        "url": item.url,
+                        "content": item.content or item.description or "",
+                        "published_at": item.published_at,
+                    }
+                )
 
         if limit:
             articles = articles[:limit]
@@ -338,8 +447,13 @@ class Repository:
         return articles
 
     def create_digest(
-        self, article_type: str, article_id: str, url: str,
-        title: str, summary: str, published_at: Optional[datetime] = None,
+        self,
+        article_type: str,
+        article_id: str,
+        url: str,
+        title: str,
+        summary: str,
+        published_at: Optional[datetime] = None,
     ) -> Optional[Digest]:
         digest_id = f"{article_type}:{article_id}"
         existing = self.session.query(Digest).filter_by(id=digest_id).first()
@@ -354,8 +468,13 @@ class Repository:
             created_at = datetime.now(timezone.utc)
 
         digest = Digest(
-            id=digest_id, article_type=article_type, article_id=article_id,
-            url=url, title=title, summary=summary, created_at=created_at,
+            id=digest_id,
+            article_type=article_type,
+            article_id=article_id,
+            url=url,
+            title=title,
+            summary=summary,
+            created_at=created_at,
         )
         self.session.add(digest)
         self.session.commit()
@@ -363,16 +482,25 @@ class Repository:
 
     def get_recent_digests(self, hours: int = 24) -> List[Dict[str, Any]]:
         cutoff_time = datetime.now(timezone.utc) - timedelta(hours=hours)
-        digests = self.session.query(Digest).filter(
-            Digest.created_at >= cutoff_time,
-        ).order_by(Digest.created_at.desc()).all()
+        digests = (
+            self.session.query(Digest)
+            .filter(
+                Digest.created_at >= cutoff_time,
+            )
+            .order_by(Digest.created_at.desc())
+            .all()
+        )
 
         return [
             {
-                "id": d.id, "article_type": d.article_type,
-                "article_id": d.article_id, "url": d.url,
-                "title": d.title, "summary": d.summary,
-                "relevance_score": d.relevance_score, "rank": d.rank,
+                "id": d.id,
+                "article_type": d.article_type,
+                "article_id": d.article_id,
+                "url": d.url,
+                "title": d.title,
+                "summary": d.summary,
+                "relevance_score": d.relevance_score,
+                "rank": d.rank,
                 "created_at": d.created_at,
             }
             for d in digests
@@ -382,7 +510,9 @@ class Repository:
         return self.session.query(Digest).filter_by(id=digest_id).first()
 
     def get_digests_paginated(
-        self, limit: int = 20, offset: int = 0,
+        self,
+        limit: int = 20,
+        offset: int = 0,
         source_type: Optional[str] = None,
         search_query: Optional[str] = None,
     ) -> List[Digest]:
@@ -393,9 +523,12 @@ class Repository:
         if search_query:
             search_pattern = f"%{search_query}%"
             query = query.filter(
-                Digest.title.ilike(search_pattern) | Digest.summary.ilike(search_pattern)
+                Digest.title.ilike(search_pattern)
+                | Digest.summary.ilike(search_pattern)
             )
-        return query.order_by(Digest.created_at.desc()).offset(offset).limit(limit).all()
+        return (
+            query.order_by(Digest.created_at.desc()).offset(offset).limit(limit).all()
+        )
 
     def count_digests(self, source_type: Optional[str] = None) -> int:
         query = self.session.query(Digest)
@@ -444,11 +577,16 @@ class Repository:
         return self.session.query(PipelineRun).filter_by(id=run_id).first()
 
     def get_pipeline_runs(self, limit: int = 20) -> List[PipelineRun]:
-        return self.session.query(PipelineRun).order_by(
-            PipelineRun.started_at.desc()
-        ).limit(limit).all()
+        return (
+            self.session.query(PipelineRun)
+            .order_by(PipelineRun.started_at.desc())
+            .limit(limit)
+            .all()
+        )
 
     def get_latest_pipeline_run(self) -> Optional[PipelineRun]:
-        return self.session.query(PipelineRun).order_by(
-            PipelineRun.started_at.desc()
-        ).first()
+        return (
+            self.session.query(PipelineRun)
+            .order_by(PipelineRun.started_at.desc())
+            .first()
+        )

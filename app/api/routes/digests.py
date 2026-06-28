@@ -38,23 +38,31 @@ def list_digests(
     repo = Repository(session=db)
 
     digests = repo.get_digests_paginated(
-        limit=limit, offset=offset,
-        source_type=source, search_query=q,
+        limit=limit,
+        offset=offset,
+        source_type=source,
+        search_query=q,
     )
     total = repo.count_digests(source_type=source)
 
     return DigestListResponse(
         items=[
             DigestResponse(
-                id=d.id, article_type=d.article_type,
-                article_id=d.article_id, url=d.url,
-                title=d.title, summary=d.summary,
+                id=d.id,
+                article_type=d.article_type,
+                article_id=d.article_id,
+                url=d.url,
+                title=d.title,
+                summary=d.summary,
                 relevance_score=d.relevance_score,
-                rank=d.rank, created_at=d.created_at,
+                rank=d.rank,
+                created_at=d.created_at,
             )
             for d in digests
         ],
-        total=total, limit=limit, offset=offset,
+        total=total,
+        limit=limit,
+        offset=offset,
     )
 
 
@@ -68,9 +76,13 @@ def get_digest(digest_id: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail=f"Digest {digest_id} not found")
 
     return DigestResponse(
-        id=digest.id, article_type=digest.article_type,
-        article_id=digest.article_id, url=digest.url,
-        title=digest.title, summary=digest.summary,
+        id=digest.id,
+        article_type=digest.article_type,
+        article_id=digest.article_id,
+        url=digest.url,
+        title=digest.title,
+        summary=digest.summary,
         relevance_score=digest.relevance_score,
-        rank=digest.rank, created_at=digest.created_at,
+        rank=digest.rank,
+        created_at=digest.created_at,
     )

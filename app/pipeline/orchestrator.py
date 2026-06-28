@@ -20,7 +20,12 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
-from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
+from tenacity import (
+    retry,
+    stop_after_attempt,
+    wait_exponential,
+    retry_if_exception_type,
+)
 
 from app.logging_config import get_logger
 from app.settings import get_settings
@@ -71,7 +76,9 @@ class PipelineOrchestrator:
         registry.auto_discover()
         return registry
 
-    def run(self, hours: int = 24, top_n: int = 10, send_email_flag: bool = True) -> Dict[str, Any]:
+    def run(
+        self, hours: int = 24, top_n: int = 10, send_email_flag: bool = True
+    ) -> Dict[str, Any]:
         """
         Execute the full pipeline synchronously.
 
@@ -132,12 +139,17 @@ class PipelineOrchestrator:
                 status="success",
                 completed_at=completed_at,
                 duration_seconds=duration,
-                steps_completed={step: results["steps"][step].get("status", "unknown") for step in ALL_STEPS},
+                steps_completed={
+                    step: results["steps"][step].get("status", "unknown")
+                    for step in ALL_STEPS
+                },
             )
             results["status"] = "success"
             results["duration_seconds"] = duration
 
-            logger.info(f"Pipeline run {run_id} completed successfully in {duration:.1f}s")
+            logger.info(
+                f"Pipeline run {run_id} completed successfully in {duration:.1f}s"
+            )
 
         except Exception as e:
             logger.error(f"Pipeline run {run_id} failed: {e}", exc_info=True)
@@ -182,9 +194,9 @@ class PipelineOrchestrator:
                 source_counts[source_name] = 0
 
         # Store all items
-        stored = self.repo.bulk_upsert_scraped_content([
-            item.model_dump() for item in all_items
-        ])
+        stored = self.repo.bulk_upsert_scraped_content(
+            [item.model_dump() for item in all_items]
+        )
 
         self.repo.update_pipeline_run(run_id, articles_scraped=stored)
         logger.info(f"  Total: {len(all_items)} scraped, {stored} new")
@@ -253,7 +265,11 @@ class PipelineOrchestrator:
         failed = 0
 
         for idx, article in enumerate(articles, 1):
-            title_short = article["title"][:50] + "..." if len(article["title"]) > 50 else article["title"]
+            title_short = (
+                article["title"][:50] + "..."
+                if len(article["title"]) > 50
+                else article["title"]
+            )
             logger.info(f"  [{idx}/{total}] {article['type']}: {title_short}")
 
             try:
@@ -281,7 +297,12 @@ class PipelineOrchestrator:
         self.repo.update_pipeline_run(run_id, digests_created=processed)
         logger.info(f"  Digests: {processed} created, {failed} failed out of {total}")
 
-        return {"status": "success", "total": total, "processed": processed, "failed": failed}
+        return {
+            "status": "success",
+            "total": total,
+            "processed": processed,
+            "failed": failed,
+        }
 
     def _step_curate(self, run_id: str, hours: int) -> Dict[str, Any]:
         """Step 4: Rank digests by user relevance."""
@@ -327,12 +348,18 @@ class PipelineOrchestrator:
 
         article_details = [
             RankedArticleDetail(
-                digest_id=a.digest_id, rank=a.rank,
-                relevance_score=a.relevance_score, reasoning=a.reasoning,
+                digest_id=a.digest_id,
+                rank=a.rank,
+                relevance_score=a.relevance_score,
+                reasoning=a.reasoning,
                 title=next((d["title"] for d in digests if d["id"] == a.digest_id), ""),
-                summary=next((d["summary"] for d in digests if d["id"] == a.digest_id), ""),
+                summary=next(
+                    (d["summary"] for d in digests if d["id"] == a.digest_id), ""
+                ),
                 url=next((d["url"] for d in digests if d["id"] == a.digest_id), ""),
-                article_type=next((d["article_type"] for d in digests if d["id"] == a.digest_id), ""),
+                article_type=next(
+                    (d["article_type"] for d in digests if d["id"] == a.digest_id), ""
+                ),
             )
             for a in ranked
         ]

@@ -25,11 +25,17 @@ def list_sources():
 
     sources = []
     for info in registry.get_source_info():
-        sources.append(SourceInfo(
-            name=info["name"],
-            display_name=info["display_name"],
-            type=info["type"],
-            extra={k: v for k, v in info.items() if k not in ("name", "display_name", "type")},
-        ))
+        sources.append(
+            SourceInfo(
+                name=info["name"],
+                display_name=info["display_name"],
+                type=info["type"],
+                extra={
+                    k: v
+                    for k, v in info.items()
+                    if k not in ("name", "display_name", "type")
+                },
+            )
+        )
 
     return SourceListResponse(sources=sources, total=len(sources))

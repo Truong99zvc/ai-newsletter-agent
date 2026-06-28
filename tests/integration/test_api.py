@@ -67,6 +67,7 @@ class TestDigestEndpoints:
     def _seed_digests(self, db):
         """Helper to seed test digests into the database."""
         from app.database.repository import Repository
+
         repo = Repository(session=db)
         for i in range(5):
             repo.create_digest(

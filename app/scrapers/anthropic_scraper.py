@@ -60,7 +60,9 @@ class AnthropicBlogScraper(BaseScraper):
                     if not published_parsed:
                         continue
 
-                    published_time = datetime(*published_parsed[:6], tzinfo=timezone.utc)
+                    published_time = datetime(
+                        *published_parsed[:6], tzinfo=timezone.utc
+                    )
                     if published_time >= cutoff_time:
                         guid = entry.get("id", entry.get("link", ""))
                         if guid not in seen_guids:
@@ -70,19 +72,23 @@ class AnthropicBlogScraper(BaseScraper):
                             if entry.get("tags"):
                                 category = entry["tags"][0].get("term")
 
-                            items.append(ScrapedItem(
-                                source_id=guid,
-                                source_type=self.get_source_name(),
-                                title=entry.get("title", ""),
-                                url=entry.get("link", ""),
-                                description=entry.get("description", ""),
-                                published_at=published_time,
-                                category=category,
-                            ))
+                            items.append(
+                                ScrapedItem(
+                                    source_id=guid,
+                                    source_type=self.get_source_name(),
+                                    title=entry.get("title", ""),
+                                    url=entry.get("link", ""),
+                                    description=entry.get("description", ""),
+                                    published_at=published_time,
+                                    category=category,
+                                )
+                            )
             except Exception as e:
                 logger.error(f"Error scraping Anthropic feed {rss_url}: {e}")
 
-        logger.info(f"Scraped {len(items)} articles from Anthropic ({len(self.RSS_URLS)} feeds)")
+        logger.info(
+            f"Scraped {len(items)} articles from Anthropic ({len(self.RSS_URLS)} feeds)"
+        )
         return items
 
     def enrich(self, item: ScrapedItem) -> ScrapedItem:

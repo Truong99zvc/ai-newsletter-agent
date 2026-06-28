@@ -12,7 +12,7 @@ class OpenAIArticle(BaseModel):
     guid: str
     published_at: datetime
     category: Optional[str] = None
-    
+
 
 class OpenAIScraper:
     def __init__(self):
@@ -23,30 +23,34 @@ class OpenAIScraper:
         feed = feedparser.parse(self.rss_url)
         if not feed.entries:
             return []
-        
+
         now = datetime.now(timezone.utc)
         cutoff_time = now - timedelta(hours=hours)
         articles = []
-        
+
         for entry in feed.entries:
             published_parsed = getattr(entry, "published_parsed", None)
             if not published_parsed:
                 continue
-            
+
             published_time = datetime(*published_parsed[:6], tzinfo=timezone.utc)
             if published_time >= cutoff_time:
-                articles.append(OpenAIArticle(
-                    title=entry.get("title", ""),
-                    description=entry.get("description", ""),
-                    url=entry.get("link", ""),
-                    guid=entry.get("id", entry.get("link", "")),
-                    published_at=published_time,
-                    category=entry.get("tags", [{}])[0].get("term") if entry.get("tags") else None
-                ))
-        
+                articles.append(
+                    OpenAIArticle(
+                        title=entry.get("title", ""),
+                        description=entry.get("description", ""),
+                        url=entry.get("link", ""),
+                        guid=entry.get("id", entry.get("link", "")),
+                        published_at=published_time,
+                        category=entry.get("tags", [{}])[0].get("term")
+                        if entry.get("tags")
+                        else None,
+                    )
+                )
+
         return articles
 
-  
+
 if __name__ == "__main__":
     scraper = OpenAIScraper()
     articles: List[OpenAIArticle] = scraper.get_articles(hours=50)

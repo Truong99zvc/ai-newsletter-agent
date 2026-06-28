@@ -50,7 +50,9 @@ class TestDigestAgent:
 
         agent = DigestAgent()
         result = agent.generate_digest(
-            title="Test", content="Content", article_type="openai",
+            title="Test",
+            content="Content",
+            article_type="openai",
         )
         assert result is None
 
@@ -77,12 +79,16 @@ class TestCuratorAgent:
         mock_response.output_parsed = RankedDigestList(
             articles=[
                 RankedArticle(
-                    digest_id="openai:001", relevance_score=9.2,
-                    rank=1, reasoning="Highly relevant to user interests",
+                    digest_id="openai:001",
+                    relevance_score=9.2,
+                    rank=1,
+                    reasoning="Highly relevant to user interests",
                 ),
                 RankedArticle(
-                    digest_id="arxiv:002", relevance_score=7.5,
-                    rank=2, reasoning="Good technical depth",
+                    digest_id="arxiv:002",
+                    relevance_score=7.5,
+                    rank=2,
+                    reasoning="Good technical depth",
                 ),
             ]
         )
@@ -96,10 +102,22 @@ class TestCuratorAgent:
             "expertise_level": "Advanced",
         }
         agent = CuratorAgent(user_profile)
-        result = agent.rank_digests([
-            {"id": "openai:001", "title": "GPT-5", "summary": "New model", "article_type": "openai"},
-            {"id": "arxiv:002", "title": "Safety Paper", "summary": "New research", "article_type": "arxiv"},
-        ])
+        result = agent.rank_digests(
+            [
+                {
+                    "id": "openai:001",
+                    "title": "GPT-5",
+                    "summary": "New model",
+                    "article_type": "openai",
+                },
+                {
+                    "id": "arxiv:002",
+                    "title": "Safety Paper",
+                    "summary": "New research",
+                    "article_type": "arxiv",
+                },
+            ]
+        )
 
         assert len(result) == 2
         assert result[0].rank == 1

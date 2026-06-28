@@ -73,12 +73,22 @@ class ProxySettings(BaseSettings):
 class PipelineSettings(BaseSettings):
     """Pipeline execution configuration."""
 
-    default_hours: int = Field(default=24, description="Default lookback window in hours")
+    default_hours: int = Field(
+        default=24, description="Default lookback window in hours"
+    )
     default_top_n: int = Field(default=10, description="Default number of top articles")
-    max_content_length: int = Field(default=8000, description="Max content chars for digest")
-    max_concurrent_scrapers: int = Field(default=5, description="Max concurrent scraper tasks")
-    retry_max_attempts: int = Field(default=3, description="Max retry attempts for failed operations")
-    retry_wait_seconds: float = Field(default=1.0, description="Initial wait between retries")
+    max_content_length: int = Field(
+        default=8000, description="Max content chars for digest"
+    )
+    max_concurrent_scrapers: int = Field(
+        default=5, description="Max concurrent scraper tasks"
+    )
+    retry_max_attempts: int = Field(
+        default=3, description="Max retry attempts for failed operations"
+    )
+    retry_wait_seconds: float = Field(
+        default=1.0, description="Initial wait between retries"
+    )
 
     model_config = {"env_file": "app/.env", "extra": "ignore"}
 
