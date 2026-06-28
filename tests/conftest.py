@@ -14,6 +14,7 @@ from unittest.mock import MagicMock
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import StaticPool
 
 from app.database.models import Base
 
@@ -32,7 +33,12 @@ def test_db():
     Each test gets a fresh database with all tables created.
     The session is rolled back after each test for isolation.
     """
-    engine = create_engine("sqlite:///:memory:", echo=False)
+    engine = create_engine(
+        "sqlite:///:memory:",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+        echo=False,
+    )
     Base.metadata.create_all(bind=engine)
     TestSession = sessionmaker(bind=engine)
     session = TestSession()

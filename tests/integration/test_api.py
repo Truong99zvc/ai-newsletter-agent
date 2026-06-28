@@ -12,13 +12,20 @@ from sqlalchemy.orm import sessionmaker
 
 from app.api.main import create_app
 from app.database.models import Base
+from sqlalchemy.pool import StaticPool
+
 from app.database.connection import get_db
 
 
 @pytest.fixture
 def api_db():
     """Create an in-memory database for API tests."""
-    engine = create_engine("sqlite:///:memory:", echo=False)
+    engine = create_engine(
+        "sqlite:///:memory:",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+        echo=False,
+    )
     Base.metadata.create_all(bind=engine)
     TestSession = sessionmaker(bind=engine)
     session = TestSession()
