@@ -1,21 +1,42 @@
-import os
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from dotenv import load_dotenv
+"""
+Database connection management.
 
-load_dotenv()
+Provides SQLAlchemy engine and session factory using
+centralized Pydantic Settings configuration.
+"""
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, Session
+
+from app.settings import get_settings
+
 
 def get_database_url() -> str:
-    user = os.getenv("POSTGRES_USER", "postgres")
-    password = os.getenv("POSTGRES_PASSWORD", "postgres")
-    host = os.getenv("POSTGRES_HOST", "localhost")
-    port = os.getenv("POSTGRES_PORT", "5432")
-    db = os.getenv("POSTGRES_DB", "ai_news_aggregator")
-    return f"postgresql://{user}:{password}@{host}:{port}/{db}"
+    """Get the database URL from application settings."""
+    return get_settings().database.url
 
-engine = create_engine(get_database_url())
+
+engine = create_engine(get_database_url(), pool_pre_ping=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-def get_session():
+
+def get_session() -> Session:
+    """Create a new database session."""
     return SessionLocal()
 
+
+def get_db():
+    """
+    FastAPI dependency for database sessions.
+
+    Yields a session and ensures it is closed after use.
+    Usage in FastAPI routes:
+        @router.get("/items")
+        def get_items(db: Session = Depends(get_db)):
+            ...
+    """
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
