@@ -8,9 +8,8 @@ Defines all SQLAlchemy ORM models for:
 """
 
 from datetime import datetime, timezone
-from typing import Optional
 
-from sqlalchemy import Column, String, DateTime, Text, Integer, Float, JSON, Enum
+from sqlalchemy import Column, String, DateTime, Text, Integer, Float, JSON
 from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()

@@ -4,8 +4,6 @@ Analytics endpoints.
 Provides dashboard statistics, source breakdowns, and trend data.
 """
 
-from typing import Optional
-
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 

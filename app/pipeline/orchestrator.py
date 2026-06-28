@@ -16,7 +16,6 @@ Pipeline Steps:
 5. DELIVER  — Compose and send email newsletter
 """
 
-import asyncio
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional

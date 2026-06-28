@@ -5,8 +5,6 @@ Provides API to trigger pipeline runs, check status,
 and view execution history.
 """
 
-from typing import List
-
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from sqlalchemy.orm import Session
 

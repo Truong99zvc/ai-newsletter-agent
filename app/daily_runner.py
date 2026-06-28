@@ -2,13 +2,13 @@ import logging
 from datetime import datetime
 from dotenv import load_dotenv
 
-load_dotenv()
-
 from app.runner import run_scrapers
 from app.services.process_anthropic import process_anthropic_markdown
 from app.services.process_youtube import process_youtube_transcripts
 from app.services.process_digest import process_digests
 from app.services.process_email import send_digest_email
+
+load_dotenv()
 
 logging.basicConfig(
     level=logging.INFO,

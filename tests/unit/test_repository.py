@@ -5,9 +5,7 @@ Tests CRUD operations, duplicate detection, pagination,
 and search functionality using an in-memory SQLite database.
 """
 
-from datetime import datetime, timedelta, timezone
-
-import pytest
+from datetime import datetime, timezone
 
 
 class TestYouTubeVideoRepository:

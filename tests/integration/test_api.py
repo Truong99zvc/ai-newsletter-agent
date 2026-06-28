@@ -5,9 +5,6 @@ Tests API endpoints end-to-end using FastAPI's TestClient
 with a test database.
 """
 
-from datetime import datetime, timezone
-from unittest.mock import patch, MagicMock
-
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine

@@ -17,7 +17,7 @@ Usage:
         items = scraper.scrape(hours=24)
 """
 
-from typing import Dict, List, Optional, Type
+from typing import Dict, List, Optional
 
 from app.logging_config import get_logger
 from app.scrapers.base import BaseScraper

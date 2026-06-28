@@ -1,13 +1,13 @@
 import logging
 from dotenv import load_dotenv
 
-load_dotenv()
-
 from app.agent.email_agent import EmailAgent, RankedArticleDetail, EmailDigestResponse
 from app.agent.curator_agent import CuratorAgent
 from app.profiles.user_profile import USER_PROFILE
 from app.database.repository import Repository
 from app.services.email import send_email, digest_to_html
+
+load_dotenv()
 
 logging.basicConfig(
     level=logging.INFO,
@@ -59,7 +59,7 @@ def generate_email_digest(hours: int = 24, top_n: int = 10) -> EmailDigestRespon
     )
     
     logger.info("Email digest generated successfully")
-    logger.info(f"\n=== Email Introduction ===")
+    logger.info("\n=== Email Introduction ===")
     logger.info(email_digest.introduction.greeting)
     logger.info(f"\n{email_digest.introduction.introduction}")
     

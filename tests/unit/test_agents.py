@@ -5,7 +5,6 @@ Tests digest generation, curation ranking, and email composition
 using mocked OpenAI API responses.
 """
 
-from datetime import datetime, timezone
 from unittest.mock import patch, MagicMock
 
 import pytest

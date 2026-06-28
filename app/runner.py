@@ -1,8 +1,7 @@
-from typing import List
 from .config import YOUTUBE_CHANNELS
-from .scrapers.youtube import YouTubeScraper, ChannelVideo
-from .scrapers.openai import OpenAIScraper, OpenAIArticle
-from .scrapers.anthropic import AnthropicScraper, AnthropicArticle
+from .scrapers.youtube import YouTubeScraper
+from .scrapers.openai import OpenAIScraper
+from .scrapers.anthropic import AnthropicScraper
 from .database.repository import Repository
 
 
