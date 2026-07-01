@@ -7,8 +7,10 @@ def main(hours: int = 24, top_n: int = 10):
 
 if __name__ == "__main__":
     import sys
+    import os
 
-    hours = 24
+    scrape_hours_env = os.getenv("SCRAPE_HOURS")
+    hours = int(scrape_hours_env) if scrape_hours_env else 24
     top_n = 10
 
     if len(sys.argv) > 1:
