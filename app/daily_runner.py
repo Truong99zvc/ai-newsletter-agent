@@ -1,3 +1,4 @@
+import os
 import logging
 from datetime import datetime
 from dotenv import load_dotenv
@@ -129,5 +130,7 @@ def run_daily_pipeline(hours: int = 24, top_n: int = 10) -> dict:
 
 
 if __name__ == "__main__":
-    result = run_daily_pipeline(hours=24, top_n=10)
+    scrape_hours_env = os.getenv("SCRAPE_HOURS")
+    scrape_hours = int(scrape_hours_env) if scrape_hours_env else 24
+    result = run_daily_pipeline(hours=scrape_hours, top_n=10)
     exit(0 if result["success"] else 1)
