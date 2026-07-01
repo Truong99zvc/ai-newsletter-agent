@@ -78,6 +78,7 @@ def run_scrapers(hours: int = 24) -> dict:
             results[name] = items
         except Exception as e:
             import logging
+
             logger = logging.getLogger(__name__)
             logger.error(f"Error running scraper {name}: {e}", exc_info=True)
             results[name] = []
