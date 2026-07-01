@@ -18,6 +18,10 @@ services:
           property: connectionString
       - key: OPENAI_API_KEY
         sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: OPENROUTER_MODEL
+        sync: false
       - key: MY_EMAIL
         sync: false
       - key: APP_PASSWORD
