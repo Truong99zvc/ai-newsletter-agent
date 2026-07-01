@@ -6,8 +6,8 @@ from .base import BaseProcessService
 
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S'
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
 )
 
 
@@ -22,9 +22,7 @@ class DigestProcessor(BaseProcessService):
 
     def process_item(self, item: dict) -> Optional[DigestOutput]:
         return self.agent.generate_digest(
-            title=item["title"],
-            content=item["content"],
-            article_type=item["type"]
+            title=item["title"], content=item["content"], article_type=item["type"]
         )
 
     def save_result(self, item: dict, result: DigestOutput) -> bool:
@@ -35,7 +33,7 @@ class DigestProcessor(BaseProcessService):
                 url=item["url"],
                 title=result.title,
                 summary=result.summary,
-                published_at=item.get("published_at")
+                published_at=item.get("published_at"),
             )
             return True
         except Exception:
@@ -58,4 +56,3 @@ if __name__ == "__main__":
     print(f"Total articles: {result['total']}")
     print(f"Processed: {result['processed']}")
     print(f"Failed: {result['failed']}")
-

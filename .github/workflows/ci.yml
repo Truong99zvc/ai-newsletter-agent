@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master, deployment]
+  pull_request:
+    branches: [main, master, deployment]
+
+jobs:
+  lint:
+    name: Lint & Format Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        run: uv sync --dev
+
+      - name: Run Ruff linter
+        run: uv run ruff check app/ tests/
+
+      - name: Run Ruff formatter check
+        run: uv run ruff format --check app/ tests/
+
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    needs: lint
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        run: uv sync --dev
+
+      - name: Run tests with coverage
+        env:
+          OPENAI_API_KEY: "test-key-for-ci"
+          MY_EMAIL: "test@example.com"
+          APP_PASSWORD: "test-password"
+          DATABASE_URL: "sqlite:///:memory:"
+        run: uv run pytest tests/ -v --cov=app --cov-report=term-missing --cov-report=html
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: htmlcov/
+          retention-days: 7

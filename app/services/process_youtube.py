@@ -20,7 +20,11 @@ class YouTubeTranscriptProcessor(BaseProcessService):
     def process_item(self, item) -> Optional[str]:
         try:
             transcript_result = self.scraper.get_transcript(item.video_id)
-            return transcript_result.text if transcript_result else TRANSCRIPT_UNAVAILABLE_MARKER
+            return (
+                transcript_result.text
+                if transcript_result
+                else TRANSCRIPT_UNAVAILABLE_MARKER
+            )
         except Exception:
             return TRANSCRIPT_UNAVAILABLE_MARKER
 
@@ -47,4 +51,3 @@ if __name__ == "__main__":
     print(f"Processed: {result['processed']}")
     print(f"Unavailable: {result['unavailable']}")
     print(f"Failed: {result['failed']}")
-
